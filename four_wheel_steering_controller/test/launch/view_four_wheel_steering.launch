@@ -12,6 +12,10 @@
   <param name="robot_description"
          command="$(find xacro)/xacro '$(find four_wheel_steering_controller)/test/urdf/four_wheel_steering.urdf.xacro'" />
 
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" default="worlds/empty.world"/>-->
+  </include>
+         
   <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
 
   <!-- Load controller config -->
@@ -22,12 +26,15 @@
         args="-urdf -param robot_description -model four_wheel_steering -z 0.5" respawn="false" output="screen" />
 
   <!-- Spawn controller -->
+  <!--<node name="controller_spawner"
+        pkg="controller_manager" type="spawner" output="screen"
+        args="robot_joint_publisher four_wheel_steering_controller"/>-->
+
   <node name="controller_spawner"
         pkg="controller_manager" type="spawner" output="screen"
-        args="robot_joint_publisher four_wheel_steering_controller --shutdown-timeout 3"/>
+        args="joint_state_controller four_wheel_steering_controller"/>
 
   <node pkg="joy" type="joy_node" name="joy_node">
-    <param name="dev" value="/dev/input/js0" />
   </node>
 
   <node pkg="teleop_twist_joy" type="teleop_node" name="teleop_twist_joy">
